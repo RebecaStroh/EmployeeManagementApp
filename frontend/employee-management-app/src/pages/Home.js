@@ -5,12 +5,11 @@ import './Home.scss';
 import logo from '../assets/logo.svg';
 
 // Components
-import Header from '../components/Header';
+import Container from '../components/Container';
 
 function Home() {
   return (
-    <>
-      <Header/>
+    <Container>
       <div className="home-content">
         <div className="left-content">
           <img src={logo} className="logo" alt="logo" />
@@ -18,10 +17,22 @@ function Home() {
           <p> Simplifying onboarding and streamline HR processes. </p>
         </div>
         <div className="right-content">
-          {/* Form */}
+          <form>
+            <div>
+              <label>E-mail</label>
+              <input placeholder='E-mail' />
+            </div>
+            <div>
+              <label>Password</label>
+              <input placeholder='Password' />
+              <a className='forgot-password'> Forgot your password? </a>
+            </div>
+            <button type='submit'>Submit</button>
+            <p>Don't have an account yet? <a > Register now </a></p>
+          </form>
         </div>
       </div>
-    </>
+    </Container>
   );
 }
 
