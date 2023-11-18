@@ -1,15 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+// External components
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Styles
+import './App.scss';
+
+// Components
+import Home from './pages/Home';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1> Welcome to Employee Management App! </h1>
-        <p>Simplifying onboarding and streamline HR processes.</p>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
 }
 
