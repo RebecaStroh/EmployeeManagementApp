@@ -13,8 +13,8 @@ function Header() {
       <img src={logo} className="logo-header" alt="logo" />
       <div class="navigation">
         <Link to="/">Home</Link>
-        <Link to="/my-profile">My Profile</Link>
-        <Link to="/search">Search</Link>
+        {/* <Link to="/my-profile">My Profile</Link> */}
+        <Link to="/employees">Employees</Link>
       </div>
     </header>
   );

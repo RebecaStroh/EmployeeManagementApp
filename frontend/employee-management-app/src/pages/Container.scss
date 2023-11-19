@@ -1,0 +1,10 @@
+div[class$="-content"] {
+  min-height: calc(100vh - 80px - 1px);
+  display: flex;
+  overflow-y: auto;
+  
+  a {
+    text-decoration: underline;
+    color: #4183c4;
+  }
+}

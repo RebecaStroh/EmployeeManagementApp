@@ -6,16 +6,19 @@ import './App.scss';
 
 // Components
 import Home from './pages/Home';
-import MyProfile from './pages/MyProfile';
-import Search from './pages/Search';
+import NewEmployee from './pages/NewEmployee';
+import Employee from './pages/Employee';
+import Employees from './pages/Employees';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/my-profile" element={<MyProfile />} />
-        <Route path="/search" element={<Search />} />
+        {/* <Route path="/my-profile" element={<Employee />} /> */}
+        <Route path="/new-employee" element={<NewEmployee />} />
+        <Route path="/employees" element={<Employees />} />
+        <Route path="/employee" element={<Employee />} />
       </Routes>
     </Router>
   );

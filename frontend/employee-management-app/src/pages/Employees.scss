@@ -1,0 +1,13 @@
+.employees-content {
+  background-color: #282c34;
+  flex-direction: column;
+  padding: 10px 90px;
+  gap: 10px;
+
+  .employees-list {
+    padding: 16px;
+    background-color: white;
+    border-radius: .28571429rem;
+    flex-wrap: wrap;
+  }
+}

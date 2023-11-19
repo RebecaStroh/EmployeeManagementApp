@@ -5,7 +5,8 @@ import './Home.scss';
 import logo from '../assets/logo.svg';
 
 // Components
-import Container from '../components/Container';
+import Container from './Container';
+import Login from '../components/Login';
 
 function Home() {
   return (
@@ -17,19 +18,7 @@ function Home() {
           <p> Simplifying onboarding and streamline HR processes. </p>
         </div>
         <div className="right-content">
-          <form>
-            <div>
-              <label>E-mail</label>
-              <input placeholder='E-mail' />
-            </div>
-            <div>
-              <label>Password</label>
-              <input placeholder='Password' />
-              <a className='forgot-password'> Forgot your password? </a>
-            </div>
-            <button type='submit'>Submit</button>
-            <p>Don't have an account yet? <a > Register now </a></p>
-          </form>
+          <Login/>
         </div>
       </div>
     </Container>
