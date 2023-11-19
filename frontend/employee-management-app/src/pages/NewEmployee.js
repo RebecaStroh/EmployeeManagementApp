@@ -28,25 +28,44 @@ function NewEmployee() {
   const editMode = searchParams.get('editMode');
 
 
-  // Function to handle Submit
-  const handleSubmit = (event) => {
-    console.log('Form data:', {
-      name,
-      dob,
-      cpf,
-      email,
-      phone,
-      street,
-      number,
-      city,
-      state,
-      employmentContract,
-      idDocument,
-      proofOfAddress,
-      schoolCurriculum,
-    });
+  // Function to handle Submit - send to backend and handle return
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const url = 'http://127.0.0.1:5001/employeemanagementapp-767af/us-central1/createEmployee';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          dob,
+          cpf: cpf.toString().replace(/[^0-9]/g, ''),
+          email,
+          phone,
+          street,
+          number,
+          city,
+          state,
+          employmentContract,
+          idDocument,
+          proofOfAddress,
+          schoolCurriculum,
+        }),
+      });
 
-    // Send to backend and handle return
+      if (response.ok) {
+        alert('Employee created successfully');
+        window.location = "/employee";
+      } else {
+        alert('Error creating employee:', response.statusText);
+        console.error('Error creating employee:', response.statusText);
+      }
+    } catch (error) {
+      alert('Error creating employee:', error.message);
+      console.error('Error creating employee:', error.message);
+    }
   };
 
   // Handle documents
@@ -70,47 +89,47 @@ function NewEmployee() {
         <form id="new-employee" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name:</label>
-            <input type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={50}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="dob">Birth of Date:</label>
-            <input type="date" id="dob" name="dob" value={dob} onChange={(e) => setDob(e.target.value)} />
+            <input type="date" id="dob" name="dob" value={dob} onChange={(e) => setDob(e.target.value)} required/>
           </div>
 
           <div className="form-group">
             <label htmlFor="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required />
+            <input type="text" id="cpf" name="cpf"  placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required maxLength={10}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={50}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="phone">Cellphone Number:</label>
-            <input type="tel" id="phone" name="phone" pattern="\d{10,}" placeholder="1234567890" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+            <input type="tel" id="phone" name="phone" pattern="\d{10}" placeholder="1234567890" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={10}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="street">Address - Street:</label>
-            <input type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)}/>
+            <input type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)} required maxLength={50}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="number">Address - Number:</label>
-            <input type="text" id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)}/>
+            <input type="text" id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)} required maxLength={10}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="city">Address - City:</label>
-            <input type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)}/>
+            <input type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)} required maxLength={50}/>
           </div>
 
           <div className="form-group">
             <label htmlFor="state">Address - State:</label>
-            <input type="text" id="state" name="state" value={state} onChange={(e) => setState(e.target.value)}/>
+            <input type="text" id="state" name="state" value={state} onChange={(e) => setState(e.target.value)} required maxLength={50}/>
           </div>
 
           <div className="form-group">

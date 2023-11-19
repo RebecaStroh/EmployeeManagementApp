@@ -7,12 +7,37 @@ admin.initializeApp();
 // Funtion to create a new data into Employee table
 exports.createEmployee = onRequest((request, response) => {
   const db = admin.database();
-  const {name, cpf} = request.body;
+  const {
+    name,
+    dob,
+    cpf,
+    email,
+    phone,
+    street,
+    number,
+    city,
+    state,
+    employmentContract,
+    idDocument,
+    proofOfAddress,
+    schoolCurriculum,
+  } = request.body;
   const ref = db.ref(`/Employee/${cpf}`);
 
   ref.set({
     name,
+    dob,
     cpf,
+    email,
+    phone,
+    street,
+    number,
+    city,
+    state,
+    employmentContract,
+    idDocument,
+    proofOfAddress,
+    schoolCurriculum,
   }, (error) => {
     if (error) {
       console.error(error);
