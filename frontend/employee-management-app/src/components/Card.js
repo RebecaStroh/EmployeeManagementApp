@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 
 function Card() {
   return (
-    <div class="card">
+    <div className="card">
       <h3><Link to="/employee">Clovis</Link></h3>
-      <div class="cpf">
+      <div className="cpf">
         <label> CPF: </label>
         XXX.XXX.XXX-X
       </div>
