@@ -4,17 +4,24 @@ import React, { useState } from 'react';
 import './Search.scss';
 
 const Search = () => {
-  const [username, setUsername] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Function to handle form submission
+  const handleSubmit = (event) => {
+    console.log('Search term:', searchTerm);
+    
+    // Send to backend and handle return
+  };
 
   return (
-    <form id="search-form">
-        <input
-          type="text"
-          placeholder='Search for name or CPF'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      <button type='submit' >Search</button>
+    <form id="search-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder='Search for name or CPF'
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <input type="submit" value="Search"/>
     </form>
   );
 };

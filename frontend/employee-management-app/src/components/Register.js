@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-
-import './Login.scss';
+import Container from '../pages/Container';
 
 // External components
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    window.location = '/employees';
+  const handleSignup = async () => {
   };
 
   return (
     <form id="login-form">
-      <h2>Login</h2>
+      <h2>Sign up</h2>
       <div>
         <label>E-mail</label>
         <input
@@ -33,12 +31,11 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <a className='forgot-password'> Forgot your password? </a>
       </div>
-      <button type='button' onClick={handleLogin}>Login</button>
-      <p>Don't have an account yet? <Link to={`/?signup=true`}> Register now </Link></p>
+      <button type='button' onClick={handleSignup}>Sign up</button>
+      <p>Already have an account? <Link to="/" > Sign in </Link></p>
     </form>
   );
 };
 
-export default Login;
+export default Register;

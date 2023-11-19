@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import NewEmployee from './pages/NewEmployee';
 import Employee from './pages/Employee';
 import Employees from './pages/Employees';
+import Register from './components/Register';
 
 function App() {
   return (

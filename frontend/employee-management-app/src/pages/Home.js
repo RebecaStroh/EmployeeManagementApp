@@ -8,7 +8,15 @@ import logo from '../assets/logo.svg';
 import Container from './Container';
 import Login from '../components/Login';
 
-function Home() {
+// External Components
+import { useLocation } from 'react-router-dom';
+import Register from '../components/Register';
+
+function Home(props) {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const signup = searchParams.get('signup');
+
   return (
     <Container>
       <div className="home-content">
@@ -18,7 +26,7 @@ function Home() {
           <p> Simplifying onboarding and streamline HR processes. </p>
         </div>
         <div className="right-content">
-          <Login/>
+          {signup ? <Register/> : <Login/>}
         </div>
       </div>
     </Container>
