@@ -2,6 +2,11 @@ const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 
+const Busboy = require("busboy");
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
+
 admin.initializeApp();
 
 // Funtion to create a new data into Employee table
@@ -19,49 +24,105 @@ exports.createEmployee = onRequest((request, response) => {
     response.set("Access-Control-Max-Age", "3600");
     response.status(204).send("");
   } else {
-    const {
-      name,
-      dob,
-      cpf,
-      email,
-      phone,
-      street,
-      number,
-      city,
-      state,
-      employmentContract,
-      idDocument,
-      proofOfAddress,
-      schoolCurriculum,
-    } = request.body;
+    const busboy = Busboy({headers: request.headers});
+    const tmpdir = os.tmpdir();
+    const bucket = admin.storage().bucket();
 
-    const db = admin.database();
-    const ref = db.ref(`/Employee/${cpf}`);
+    // Create the objects which will accumulate all the content sent.
+    const employee = {};
+    const uploads = {};
 
-    ref.set({
-      name,
-      dob,
-      cpf,
-      email,
-      phone,
-      street,
-      number,
-      city,
-      state,
-      employmentContract,
-      idDocument,
-      proofOfAddress,
-      schoolCurriculum,
-    }, (error) => {
-      if (error) {
-        console.error(error);
-        logger.error(`User not included ${error}`, {structuredData: true});
-        response.status(404).send("No data found");
-      } else {
-        logger.info(`User included`, {structuredData: true});
-        response.status(200).send(`User included`);
-      }
+    // Process each field.
+    busboy.on("field", (fieldname, val) => {
+      console.log(`Processed field ${fieldname}: ${val}.`);
+      employee[fieldname] = val;
     });
+
+    // Process each file uploaded.
+    const fileWrites = [];
+    busboy.on("file", (fieldname, file, {filename, mimeType}) => {
+      // Note: os.tmpdir() points to an in-memory file system on GCF
+      // Thus, any files in it must fit in the instance's memory.
+      console.log(`Processed file ${filename}`);
+      const filepath = path.join(tmpdir, filename);
+      uploads[fieldname] = filepath;
+
+      const writeStream = fs.createWriteStream(filepath);
+      file.pipe(writeStream);
+
+      // File was processed by Busboy; wait for it to be written.
+      const promise = new Promise((resolve, reject) => {
+        file.on("end", () => {
+          writeStream.end();
+        });
+        writeStream.on("close", async () => {
+          if (!employee || !employee.cpf) {
+            reject(new Error("No cpf related"));
+            return;
+          }
+          try {
+            // Upload the file to Firebase Storage
+            const fileBuffer = fs.readFileSync(filepath);
+            // Creates a folder for the User with his CPF
+            const fileUpload = bucket.file(`${employee.cpf}/${filename}`);
+            await fileUpload.save(fileBuffer, {
+              metadata: {
+                contentType: mimeType,
+              },
+            });
+            console.log(`File uploaded to Firebase Storage: ${filename}`);
+
+            // TO DO: Get the download URL
+            // employee[fieldname] = await fileUpload.getSignedUrl({
+            //   action: "read",
+            //   expires: "2099-12-31", // Adjust the expiration date as needed
+            // });
+
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
+        writeStream.on("error", reject);
+      });
+      fileWrites.push(promise);
+    });
+
+    // Triggered once all uploaded files are processed by Busboy.
+    // We still need to wait for the disk writes (saves) to complete.
+    busboy.on("finish", async () => {
+      await Promise.all(fileWrites);
+
+      // Delete the temporary local file
+      for (const file in uploads) {
+        fs.unlinkSync(uploads[file]);
+      }
+
+      // Checks if a cpf, the id, was sent
+      if (!employee || !employee.cpf) {
+        response.status(404).send("No cpf sent");
+        return;
+      }
+
+      // Create employee instance
+      const db = admin.database();
+      const ref = db.ref(`/Employee/${employee.cpf}`);
+
+      ref.set(employee, (error) => {
+        if (error) {
+          console.error(error);
+          logger.error(`User not included ${error}`, {structuredData: true});
+          response.status(404).send("No data found");
+        } else {
+          logger.info(`User included`, {structuredData: true});
+          response.status(200).send(`User included`);
+        }
+      });
+
+      response.status(200);
+    });
+
+    busboy.end(request.rawBody);
   }
 });
 
