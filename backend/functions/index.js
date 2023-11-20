@@ -42,10 +42,35 @@ exports.createEmployee = onRequest((request, response) => {
     if (error) {
       console.error(error);
       logger.error(`User not included ${error}`, {structuredData: true});
-      response.send(500);
+      response.status(404).send("No data found");
     } else {
       logger.info(`User included`, {structuredData: true});
-      response.send(200);
+      response.status(200).send(`User included`);
     }
+  });
+});
+
+// Function to get all data from Employee table
+exports.getAllEmployees = onRequest((request, response) => {
+  const db = admin.database();
+  const ref = db.ref("/Employee");
+
+  ref.once("value", (snapshot) => {
+    const data = snapshot.val();
+    const employees = [];
+
+    if (data) {
+      // Convert the data object to an array
+      Object.keys(data).forEach((key) => {
+        employees.push(data[key]);
+      });
+
+      response.status(200).json(employees);
+    } else {
+      response.status(404).send("No data found");
+    }
+  }, (errorObject) => {
+    console.error("The read failed: " + errorObject.code);
+    response.status(500).send("Internal Server Error");
   });
 });
