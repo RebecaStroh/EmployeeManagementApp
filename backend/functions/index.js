@@ -2,7 +2,7 @@ const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 
-const Busboy = require("busboy");
+const bb = require("busboy");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
@@ -24,7 +24,7 @@ exports.createEmployee = onRequest((request, response) => {
     response.set("Access-Control-Max-Age", "3600");
     response.status(204).send("");
   } else {
-    const busboy = Busboy({headers: request.headers});
+    const busboy = bb({headers: request.headers});
     const tmpdir = os.tmpdir();
     const bucket = admin.storage().bucket();
 
@@ -94,7 +94,8 @@ exports.createEmployee = onRequest((request, response) => {
       await Promise.all(fileWrites);
 
       // Delete the temporary local file
-      for (const file in uploads) {
+      const uploadKeys = Object.keys(uploads);
+      for (const file of uploadKeys) {
         fs.unlinkSync(uploads[file]);
       }
 
