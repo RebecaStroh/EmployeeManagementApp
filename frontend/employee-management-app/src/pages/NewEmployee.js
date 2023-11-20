@@ -8,25 +8,23 @@ import Container from './Container';
 import './NewEmployee.scss';
 
 function NewEmployee() {
-  // States for each form field
-  const [name, setName] = useState('');
-  const [dob, setDob] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [street, setStreet] = useState('');
-  const [number, setNumber] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [employmentContract, setEmploymentContract] = useState(null);
-  const [idDocument, setIdDocument] = useState(null);
-  const [proofOfAddress, setProofOfAddress] = useState(null);
-  const [schoolCurriculum, setSchoolCurriculum] = useState(null);
-
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const editMode = searchParams.get('editMode');
+  const employee = location.state?.employee;
 
+  // States for each form field
+  const [name, setName] = useState(employee?.name || '');
+  const [dob, setDob] = useState(employee?.dob || '');
+  const [cpf, setCpf] = useState(employee?.cpf || '');
+  const [email, setEmail] = useState(employee?.email || '');
+  const [phone, setPhone] = useState(employee?.phone || '');
+  const [street, setStreet] = useState(employee?.street || '');
+  const [number, setNumber] = useState(employee?.number || '');
+  const [city, setCity] = useState(employee?.city || '');
+  const [state, setState] = useState(employee?.state || '');
+  const [employmentContract, setEmploymentContract] = useState(employee?.employmentContract ||null);
+  const [idDocument, setIdDocument] = useState(employee?.idDocument ||null);
+  const [proofOfAddress, setProofOfAddress] = useState(employee?.proofOfAddress ||null);
+  const [schoolCurriculum, setSchoolCurriculum] = useState(employee?.schoolCurriculum ||null);
 
   // Function to handle Submit - send to backend and handle return
   const handleSubmit = async (event) => {
@@ -85,7 +83,7 @@ function NewEmployee() {
   return (
     <Container>
       <div className="new-employee-content">
-        <h1>{editMode ? "Edit" : "New"} employee</h1>
+        <h1>{employee ? "Edit" : "New"} employee</h1>
         <form id="new-employee" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name:</label>
@@ -99,7 +97,7 @@ function NewEmployee() {
 
           <div className="form-group">
             <label htmlFor="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf"  placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required maxLength={10}/>
+            <input type="text" id="cpf" name="cpf"  placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required maxLength={10}  disabled={employee?1:0}/>
           </div>
 
           <div className="form-group">
