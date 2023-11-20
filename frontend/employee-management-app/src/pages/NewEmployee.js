@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Components
 import Container from './Container';
@@ -9,7 +9,8 @@ import './NewEmployee.scss';
 
 function NewEmployee() {
   const location = useLocation();
-  const employee = location.state?.employee;
+  const navigate = useNavigate();
+  let employee = location.state?.employee;
 
   // States for each form field
   const [name, setName] = useState(employee?.name || '');
@@ -29,33 +30,34 @@ function NewEmployee() {
   // Function to handle Submit - send to backend and handle return
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const url = 'http://127.0.0.1:5001/employeemanagementapp-767af/us-central1/createEmployee';
+    const url = 'https://createemployee-nlxluegtta-uc.a.run.app';
     try {
+      employee = {
+        name,
+        dob,
+        cpf: cpf.toString().replace(/[^0-9]/g, ''),
+        email,
+        phone,
+        street,
+        number,
+        city,
+        state,
+        employmentContract,
+        idDocument,
+        proofOfAddress,
+        schoolCurriculum,
+      };
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name,
-          dob,
-          cpf: cpf.toString().replace(/[^0-9]/g, ''),
-          email,
-          phone,
-          street,
-          number,
-          city,
-          state,
-          employmentContract,
-          idDocument,
-          proofOfAddress,
-          schoolCurriculum,
-        }),
+        body: JSON.stringify(employee),
       });
 
       if (response.ok) {
         alert('Employee created successfully');
-        window.location = "/employee";
+        navigate('/employee', { state: { employee: employee } });
       } else {
         alert('Error creating employee:', response.statusText);
         console.error('Error creating employee:', response.statusText);

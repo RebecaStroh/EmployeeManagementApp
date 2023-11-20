@@ -24,7 +24,7 @@ function Employee() {
     idDocument,
     proofOfAddress,
     schoolCurriculum,
-  } = employee;
+  } = employee || {};
 
   return (
     <Container>
