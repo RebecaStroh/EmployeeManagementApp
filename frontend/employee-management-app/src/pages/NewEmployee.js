@@ -32,32 +32,43 @@ function NewEmployee() {
     event.preventDefault();
     const url = 'https://createemployee-nlxluegtta-uc.a.run.app';
     try {
-      employee = {
-        name,
-        dob,
-        cpf: cpf.toString().replace(/[^0-9]/g, ''),
-        email,
-        phone,
-        street,
-        number,
-        city,
-        state,
-        employmentContract,
-        idDocument,
-        proofOfAddress,
-        schoolCurriculum,
-      };
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('cpf', cpf.toString().replace(/[^0-9]/g, ''));
+      formData.append('dob', dob);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('street', street);
+      formData.append('number', number);
+      formData.append('city', city);
+      formData.append('state', state);
+      formData.append('employmentContract', employmentContract);
+      formData.append('idDocument', idDocument);
+      formData.append('proofOfAddress', proofOfAddress);
+      formData.append('schoolCurriculum', schoolCurriculum);
+      
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(employee),
+        body: formData,
       });
 
       if (response.ok) {
         alert('Employee created successfully');
-        navigate('/employee', { state: { employee: employee } });
+        navigate('/employee', { state: { employee: {
+          name,
+          dob,
+          cpf: cpf.toString().replace(/[^0-9]/g, ''),
+          email,
+          phone,
+          street,
+          number,
+          city,
+          state,
+          employmentContract,
+          idDocument,
+          proofOfAddress,
+          schoolCurriculum,
+        } } });
       } else {
         alert('Error creating employee:', response.statusText);
         console.error('Error creating employee:', response.statusText);
