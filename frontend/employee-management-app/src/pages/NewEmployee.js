@@ -32,6 +32,7 @@ function NewEmployee() {
     event.preventDefault();
     const url = 'https://createemployee-nlxluegtta-uc.a.run.app';
     try {
+      // Create structure to sen to API
       const formData = new FormData();
       formData.append('name', name);
       formData.append('cpf', cpf.toString().replace(/[^0-9]/g, ''));
@@ -46,6 +47,9 @@ function NewEmployee() {
       formData.append('idDocument', linkDocuments?.idDocument || idDocument);
       formData.append('proofOfAddress', linkDocuments?.proofOfAddress || proofOfAddress);
       formData.append('schoolCurriculum', linkDocuments?.schoolCurriculum || schoolCurriculum);
+
+      // In case it is a change on an existing instance, indicate it to API
+      if (employee) formData.append('edit', "true");
       
       const response = await fetch(url, {
         method: 'POST',
