@@ -102,22 +102,51 @@ exports.createEmployee = onRequest((request, response) => {
         return;
       }
 
-      // Create employee instance
+      // Create or Get employee instance
       const db = admin.database();
       const ref = db.ref(`/Employee/${employee.cpf}`);
 
+      // Checks if it is a change
+      if (employee.edit) {
+        // Check if the employee exists in the database
+        ref.once("value", (snapshot) => {
+          const exists = snapshot.exists();
+          console.log(" CHECKING");
+
+          if (exists) {
+            // Create employee instance
+            const db = admin.database();
+            const ref = db.ref(`/Employee/${employee.cpf}`);
+
+            // Overwrite data
+            ref.set(employee, (error) => {
+              if (error) {
+                console.error(error);
+                logger.error(`Employee not included ${error}`, {structuredData: true});
+                response.status(404).send("No data found");
+              } else {
+                logger.info(`Employee included`, {structuredData: true});
+                response.status(200).send(employee);
+              }
+            });
+          } else {
+            response.status(404).send("Employee not found");
+          }
+        });
+        return;
+      }
+
+      // Set new data
       ref.set(employee, (error) => {
         if (error) {
           console.error(error);
-          logger.error(`User not included ${error}`, {structuredData: true});
+          logger.error(`Employee not included ${error}`, {structuredData: true});
           response.status(404).send("No data found");
         } else {
-          logger.info(`User included`, {structuredData: true});
+          logger.info(`Employee included`, {structuredData: true});
           response.status(200).send(employee);
         }
       });
-
-      response.status(200);
     });
 
     busboy.end(request.rawBody);
