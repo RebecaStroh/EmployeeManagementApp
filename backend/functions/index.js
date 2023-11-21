@@ -64,19 +64,16 @@ exports.createEmployee = onRequest((request, response) => {
             // Upload the file to Firebase Storage
             const fileBuffer = fs.readFileSync(filepath);
             // Creates a folder for the User with his CPF
-            const fileUpload = bucket.file(`${employee.cpf}/${filename}`);
+            const fileUpload = bucket.file(`${employee.cpf}/${fieldname}`);
             await fileUpload.save(fileBuffer, {
               metadata: {
                 contentType: mimeType,
               },
             });
-            console.log(`File uploaded to Firebase Storage: ${filename}`);
+            console.log(`File uploaded to Firebase Storage: ${fieldname}`);
 
-            // TO DO: Get the download URL
-            // employee[fieldname] = await fileUpload.getSignedUrl({
-            //   action: "read",
-            //   expires: "2099-12-31", // Adjust the expiration date as needed
-            // });
+            // Get the download URL
+            employee[fieldname] = `https://storage.cloud.google.com/employeemanagementapp-767af.appspot.com/${employee.cpf}/${fieldname}`;
 
             resolve();
           } catch (error) {
@@ -116,7 +113,7 @@ exports.createEmployee = onRequest((request, response) => {
           response.status(404).send("No data found");
         } else {
           logger.info(`User included`, {structuredData: true});
-          response.status(200).send(`User included`);
+          response.status(200).send(employee);
         }
       });
 
