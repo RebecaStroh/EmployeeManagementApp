@@ -73,19 +73,19 @@ function Employee() {
             </div>
             <div className="info-item">
               <label>Employment Contract:</label>
-              <a href={employmentContract} target="_blank" rel="noopener noreferrer">View Document</a>
+              {employmentContract !== "null" ? <a href={employmentContract} target="_blank" rel="noopener noreferrer">View Document</a> : "No file uploaded"}
             </div>
             <div className="info-item">
               <label>CPF/RG:</label>
-              <a href={idDocument} target="_blank" rel="noopener noreferrer">View Document</a>
+              {idDocument !== "null" ? <a href={idDocument} target="_blank" rel="noopener noreferrer">View Document</a> : "No file uploaded"}
             </div>
             <div className="info-item">
               <label>Proof of Address:</label>
-              <a href={proofOfAddress} target="_blank" rel="noopener noreferrer">View Document</a>
+              {proofOfAddress !== "null" ? <a href={proofOfAddress} target="_blank" rel="noopener noreferrer">View Document</a> : "No file uploaded"}
             </div>
             <div className="info-item">
               <label>School Curriculum:</label>
-              <a href={schoolCurriculum} target="_blank" rel="noopener noreferrer">View Document</a>
+              {schoolCurriculum !== "null" ? <a href={schoolCurriculum} target="_blank" rel="noopener noreferrer">View Document</a> : "No file uploaded"}
             </div>
           </div>
       </div>

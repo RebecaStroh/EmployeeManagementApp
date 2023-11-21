@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Components
@@ -10,7 +10,7 @@ import './NewEmployee.scss';
 function NewEmployee() {
   const location = useLocation();
   const navigate = useNavigate();
-  let employee = location.state?.employee;
+  const employee = location.state?.employee;
 
   // States for each form field
   const [name, setName] = useState(employee?.name || '');
@@ -22,10 +22,10 @@ function NewEmployee() {
   const [number, setNumber] = useState(employee?.number || '');
   const [city, setCity] = useState(employee?.city || '');
   const [state, setState] = useState(employee?.state || '');
-  const [employmentContract, setEmploymentContract] = useState(employee?.employmentContract ||null);
-  const [idDocument, setIdDocument] = useState(employee?.idDocument ||null);
-  const [proofOfAddress, setProofOfAddress] = useState(employee?.proofOfAddress ||null);
-  const [schoolCurriculum, setSchoolCurriculum] = useState(employee?.schoolCurriculum ||null);
+  const [employmentContract, setEmploymentContract] = useState(null);
+  const [idDocument, setIdDocument] = useState(null);
+  const [proofOfAddress, setProofOfAddress] = useState(null);
+  const [schoolCurriculum, setSchoolCurriculum] = useState(null);
 
   // Function to handle Submit - send to backend and handle return
   const handleSubmit = async (event) => {
@@ -42,10 +42,10 @@ function NewEmployee() {
       formData.append('number', number);
       formData.append('city', city);
       formData.append('state', state);
-      formData.append('employmentContract', employmentContract);
-      formData.append('idDocument', idDocument);
-      formData.append('proofOfAddress', proofOfAddress);
-      formData.append('schoolCurriculum', schoolCurriculum);
+      formData.append('employmentContract', linkDocuments?.employmentContract || employmentContract);
+      formData.append('idDocument', linkDocuments?.idDocument || idDocument);
+      formData.append('proofOfAddress', linkDocuments?.proofOfAddress || proofOfAddress);
+      formData.append('schoolCurriculum', linkDocuments?.schoolCurriculum || schoolCurriculum);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -53,22 +53,9 @@ function NewEmployee() {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
         alert('Employee created successfully');
-        navigate('/employee', { state: { employee: {
-          name,
-          dob,
-          cpf: cpf.toString().replace(/[^0-9]/g, ''),
-          email,
-          phone,
-          street,
-          number,
-          city,
-          state,
-          employmentContract,
-          idDocument,
-          proofOfAddress,
-          schoolCurriculum,
-        } } });
+        navigate('/employee', { state: { employee: responseData } });
       } else {
         alert('Error creating employee:', response.statusText);
         console.error('Error creating employee:', response.statusText);
@@ -78,6 +65,19 @@ function NewEmployee() {
       console.error('Error creating employee:', error.message);
     }
   };
+
+  const [linkDocuments, setLinkDocuments] = useState(null);
+
+  useEffect(() => {
+    if (employee) {
+      setLinkDocuments({
+        employmentContract: employee.employmentContract !== "null" ? employee.employmentContract : null,
+        idDocument: employee.idDocument !== "null" ? employee.idDocument : null,
+        proofOfAddress: employee.proofOfAddress !== "null" ? employee.proofOfAddress : null,
+        schoolCurriculum: employee.schoolCurriculum !== "null" ? employee.schoolCurriculum : null
+      });
+    }
+  }, []);
 
   // Handle documents
   const handleEmploymentContractChange = (event) => {
@@ -110,7 +110,7 @@ function NewEmployee() {
 
           <div className="form-group">
             <label htmlFor="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf"  placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required maxLength={10}  disabled={employee?1:0}/>
+            <input type="text" id="cpf" name="cpf" placeholder="123.456.789-01" value={cpf} onChange={(e) => setCpf(e.target.value)} required maxLength={14} disabled={employee?1:0}/>
           </div>
 
           <div className="form-group">
@@ -145,30 +145,54 @@ function NewEmployee() {
 
           <div className="form-group">
             <label htmlFor="employment-contract">Upload Employment Contract:</label>
-            <div className="file-upload">
-              <input type="file" id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleEmploymentContractChange} />
-            </div>
+            {linkDocuments?.employmentContract
+              ? <div>
+                  <a href={linkDocuments.employmentContract} target="_blank" rel="noopener noreferrer">View Document</a>
+                  <input type="button" value="remove" onClick={() => { setLinkDocuments({...linkDocuments, employmentContract: null}) }}/>
+                </div>
+              : <div className="file-upload">
+                <input type="file" id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleEmploymentContractChange} />
+              </div>
+            }
           </div>
 
           <div className="form-group">
             <label htmlFor="id">Upload CPF/RG:</label>
-            <div className="file-upload">
-              <input type="file" id="id" name="id" accept=".pdf" onChange={handleIdDocumentChange} />
-            </div>
+            {linkDocuments?.idDocument
+              ? <div>
+                <a href={linkDocuments.idDocument} target="_blank" rel="noopener noreferrer">View Document</a>
+                <input type="button" value="remove" onClick={() => { setLinkDocuments({...linkDocuments, idDocument: null}) }}/>
+              </div>
+              : <div className="file-upload">
+                <input type="file" id="id" name="id" accept=".pdf" onChange={handleIdDocumentChange} />
+              </div>
+            }
           </div>
 
           <div className="form-group">
             <label htmlFor="proof-of-address">Upload Proof of Address:</label>
-            <div className="file-upload">
-              <input type="file" id="proof-of-address" name="proof-of-address" accept=".pdf" onChange={handleProofOfAddressChange} />
-            </div>
+            {linkDocuments?.proofOfAddress
+              ? <div>
+                <a href={linkDocuments.proofOfAddress} target="_blank" rel="noopener noreferrer">View Document</a>
+                <input type="button" value="remove" onClick={() => { setLinkDocuments({...linkDocuments, proofOfAddress: null}) }}/>
+              </div>
+              : <div className="file-upload">
+                <input type="file" id="proof-of-address" name="proof-of-address" accept=".pdf" onChange={handleProofOfAddressChange} />
+              </div>
+            }
           </div>
 
           <div className="form-group">
             <label htmlFor="school-curriculum">Upload School Curriculum:</label>
-            <div className="file-upload">
-              <input type="file" id="school-curriculum" name="school-curriculum" accept=".pdf" onChange={handleSchoolCurriculumChange} />
-            </div>
+            {linkDocuments?.schoolCurriculum
+              ? <div>
+                <a href={linkDocuments.schoolCurriculum} target="_blank" rel="noopener noreferrer">View Document</a>
+                <input type="button" value="remove" onClick={() => { setLinkDocuments({...linkDocuments, schoolCurriculum: null}) }}/>
+              </div>
+              : <div className="file-upload">
+                <input type="file" id="school-curriculum" name="school-curriculum" accept=".pdf" onChange={handleSchoolCurriculumChange} />
+              </div>
+            }
           </div>
 
           <div className="form-group">
