@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import './Login.scss';
-
 // External components
 import { Link } from 'react-router-dom';
 

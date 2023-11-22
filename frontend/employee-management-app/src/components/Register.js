@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Container from '../pages/Container';
 
 // External components
 import { Link } from 'react-router-dom';
