@@ -24,6 +24,9 @@ header {
       text-decoration: none;
       font-size: 18px;
       color: #14477d;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }

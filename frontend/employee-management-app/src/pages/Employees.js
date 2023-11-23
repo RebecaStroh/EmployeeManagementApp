@@ -13,9 +13,11 @@ import Box from '@mui/material/Box';
 function Employees() {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Function to fetch all employees
   const fetchEmployees = async () => {
+    setLoading(true);
     try {
       const response = await fetch('https://getallemployees-nlxluegtta-uc.a.run.app', {
         method: 'POST',
@@ -31,6 +33,7 @@ function Employees() {
     } catch (error) {
       console.error('Error fetching employees:', error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -50,11 +53,19 @@ function Employees() {
       <Box display="flex" gap={3}>
         <Box sx={{ flex: 0.6 }} >
           {employees.length === 0 
-            ? <Card>No employees found</Card>
+            ? <Card sx={{
+              p: 2,
+              mb: 1,
+              borderRadius: '8px',
+              boxShadow: '0px 2px 0.5px rgba(0, 0, 0, 0.1)',
+              '&:hover': { opacity: 0.8, transform: 'scale(1.01)' },
+              transition: 'transform 0.3s',
+              border: '1px solid #ccc',
+            }}><h3>No employees found</h3></Card>
             : employees.map((employee, index)=> <EmployeeCard key={index} employee={employee}/>)}
         </Box>
         <Card sx={{p: 2, flex: 0.4, marginBottom: 'auto',border: '1px solid #ccc'}}>
-          <Search handleSearch={handleSearch} searchTerm={searchTerm}/>
+          <Search handleSearch={handleSearch} searchTerm={searchTerm} loading={loading}/>
         </Card>
       </Box>
     </Container>

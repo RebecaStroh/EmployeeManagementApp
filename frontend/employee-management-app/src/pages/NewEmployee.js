@@ -77,9 +77,11 @@ function NewEmployee() {
   const [idDocument, setIdDocument] = useState(null);
   const [proofOfAddress, setProofOfAddress] = useState(null);
   const [schoolCurriculum, setSchoolCurriculum] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Function to handle Submit - send to backend and handle return
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const url = 'https://createemployee-nlxluegtta-uc.a.run.app';
     try {
@@ -110,6 +112,7 @@ function NewEmployee() {
       if (response.ok) {
         const responseData = await response.json();
         alert('Employee created successfully');
+        setLoading(false);
         navigate('/new-employee', { state: { employee: responseData } });
       } else {
         alert('Error creating employee:', response.statusText);
@@ -119,6 +122,7 @@ function NewEmployee() {
       alert('Error creating employee:', error.message);
       console.error('Error creating employee:', error.message);
     }
+    setLoading(false);
   };
 
   const [linkDocuments, setLinkDocuments] = useState(null);
@@ -177,6 +181,7 @@ function NewEmployee() {
   return (
     <Container title={`${employee ? "Edit" : "New"} employee`} classes="with-background">
       <Box
+        className={loading ? 'loading' : ""}
         component="form"
         sx={{
           '& .MuiTextField-root': { m: 1 },

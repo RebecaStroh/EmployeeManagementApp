@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-const Search = ({handleSearch, searchTerm}) => {
+const Search = ({handleSearch, searchTerm, loading}) => {
   const [currSearchTerm, setCurrSearchTerm] = useState(searchTerm);
 
   // Function to handle form submission
@@ -15,6 +15,7 @@ const Search = ({handleSearch, searchTerm}) => {
 
   return (
     <Box
+      className={loading ? 'loading' : ""}
       component="form"
       onSubmit={handleSubmit}
       alignItems="center"
