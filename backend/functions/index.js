@@ -6,6 +6,7 @@ const bb = require("busboy");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
+const stringSimilarity = require("string-similarity");
 
 admin.initializeApp();
 
@@ -111,7 +112,6 @@ exports.createEmployee = onRequest((request, response) => {
         // Check if the employee exists in the database
         ref.once("value", (snapshot) => {
           const exists = snapshot.exists();
-          console.log(" CHECKING");
 
           if (exists) {
             // Create employee instance
@@ -122,7 +122,7 @@ exports.createEmployee = onRequest((request, response) => {
             ref.set(employee, (error) => {
               if (error) {
                 console.error(error);
-                logger.error(`Employee not included ${error}`, {structuredData: true});
+                logger.error(`Not included ${error}`, {structuredData: true});
                 response.status(404).send("No data found");
               } else {
                 logger.info(`Employee included`, {structuredData: true});
@@ -140,7 +140,7 @@ exports.createEmployee = onRequest((request, response) => {
       ref.set(employee, (error) => {
         if (error) {
           console.error(error);
-          logger.error(`Employee not included ${error}`, {structuredData: true});
+          logger.error(`Not included ${error}`, {structuredData: true});
           response.status(404).send("No data found");
         } else {
           logger.info(`Employee included`, {structuredData: true});
@@ -168,6 +168,8 @@ exports.getAllEmployees = onRequest((request, response) => {
     response.set("Access-Control-Max-Age", "3600");
     response.status(204).send("");
   } else {
+    const {searchTerm} = request.body;
+
     const db = admin.database();
     const ref = db.ref("/Employee");
 
@@ -177,9 +179,46 @@ exports.getAllEmployees = onRequest((request, response) => {
 
       if (data) {
         // Convert the data object to an array
-        Object.keys(data).forEach((key) => {
-          employees.push(data[key]);
-        });
+        if ("cpf" in data) {
+          // Check if there is any searchTerm
+          if (searchTerm === "") {
+            employees.push(data);
+          } else {
+            // Filter by calculating the Jaccard similarity
+            Object.keys(data).forEach((attr) => {
+              const similarity = stringSimilarity
+                  .compareTwoStrings(searchTerm.toLowerCase(),
+                      data[attr].toLowerCase());
+              const similarityThreshold = 0.4;
+
+              if (similarity >= similarityThreshold) {
+                employees.push(data);
+                return;
+              }
+            });
+          }
+        } else {
+          // Go througt the result array
+          Object.keys(data).forEach((key) => {
+            // Check if there is any searchTerm
+            if (searchTerm === "") {
+              employees.push(data[key]);
+            } else {
+              // Filter by calculating the Jaccard similarity
+              Object.keys(data[key]).forEach((attr) => {
+                const similarity = stringSimilarity
+                    .compareTwoStrings(searchTerm.toLowerCase(),
+                        data[key][attr].toLowerCase());
+                const similarityThreshold = 0.4;
+
+                if (similarity >= similarityThreshold) {
+                  employees.push(data[key]);
+                  return;
+                }
+              });
+            }
+          });
+        }
 
         response.status(200).json(employees);
       } else {
