@@ -124,7 +124,6 @@ function NewEmployee() {
       if (linkDocuments?.idDocument) {
         formData.append('idDocument', linkDocuments?.idDocument);
       } else if (idDocument) {
-        // console.log("type:", idDocument.type)
         const newFile = new Blob([idDocument], { type: idDocument.type });
         newFile.name = "idDocument";
         formData.append('idDocument', newFile, "idDocument");
