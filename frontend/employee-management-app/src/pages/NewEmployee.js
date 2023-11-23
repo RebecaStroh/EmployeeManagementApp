@@ -15,6 +15,7 @@ import { styled } from '@mui/system';
 import {Paper } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
+import { Link } from 'react-router-dom';
 
 
 // New styled components
@@ -62,6 +63,7 @@ function NewEmployee() {
   const location = useLocation();
   const navigate = useNavigate();
   const employee = location.state?.employee;
+  const mode = location.state?.mode || 'New';
 
   // States for each form field
   const [name, setName] = useState(employee?.name || '');
@@ -162,13 +164,14 @@ function NewEmployee() {
               <Button component="label" variant="contained" color="blue" sx={{width:'100%', borderRadius: 20, height: '100%' }}>
                 <a href={fileLink} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none', color: 'white'}}>View Document</a>
               </Button>
-                <CloseIcon onClick={removeLink} sx={{ cursor: "pointer" }} fontSize='1'/>
+              {mode !== 'View' && <CloseIcon onClick={removeLink} sx={{ cursor: "pointer" }} fontSize='1' />}
             </Box>
           : !file?.name 
             ? <Button
                 component="label" variant="contained" color="blue"
                 startIcon={<CloudUploadIcon />}
                 sx={{ mt:1, mb:1, ml:2, mr:2, borderRadius: 20, height: '100%' }}
+                disabled={mode === 'View'}
               >
                 Upload <VisuallyHiddenInput type="file"  id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleChange}/>
               </Button>
@@ -179,7 +182,13 @@ function NewEmployee() {
   }
 
   return (
-    <Container title={`${employee ? "Edit" : "New"} employee`} classes="with-background">
+    <Container
+      title={`${mode} employee`}
+      classes="with-background"
+      leftButtonContent={mode === 'View' 
+        ? <Link to="/new-employee" style={{ color: 'white' }} state={{ employee, mode: 'Edit' }}> Edit </Link>
+        : null}
+      >
       <Box
         className={loading ? 'loading' : ""}
         component="form"
@@ -204,11 +213,13 @@ function NewEmployee() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              disabled={mode === 'View'}
               maxLength={50}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} required 
                 sx={{ '>div':{borderRadius: 20} }}
+                disabled={mode === 'View'}
               />
             </LocalizationProvider>
             <TextField
@@ -220,7 +231,7 @@ function NewEmployee() {
               onChange={(e) => setCpf(e.target.value)}
               required
               maxLength={14}
-              disabled={employee ? true : false}
+              disabled={mode !== 'New'}
               sx={{ '>div':{borderRadius: 20} }}
               />
           </Section>
@@ -240,6 +251,7 @@ function NewEmployee() {
               onChange={(e) => setEmail(e.target.value)}
               required
               maxLength={50}
+              disabled={mode === 'View'}
             />
             <TextField
               label="Cellphone Number"
@@ -253,6 +265,7 @@ function NewEmployee() {
               required
               maxLength={10}
               sx={{ '>div':{borderRadius: 20} }}
+              disabled={mode === 'View'}
             />
           </Section>
           <Section>
@@ -260,10 +273,28 @@ function NewEmployee() {
               <p>Address Information</p>
               <Line />
             </Header>
-            <TextField sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }} label="Street" type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)} required maxLength={50} />
-            <TextField sx={{ '>div':{borderRadius: 20} }} label="Number" type="number" id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)} required maxLength={10} />
-            <TextField sx={{ width: '30%', minWidth: '400px', '>div':{borderRadius: 20} }} label="City" type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)} required maxLength={50} />
-            <TextField sx={{ '>div':{borderRadius: 20} }} label="State" type="text" id="state" name="state" value={state} onChange={(e) => setState(e.target.value)} required maxLength={50} />
+            <TextField
+              sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }}
+              label="Street" type="text" id="street" name="street" value={street}
+              onChange={(e) => setStreet(e.target.value)} required maxLength={50} 
+              disabled={mode === 'View'}
+              />
+            <TextField
+              sx={{ '>div':{borderRadius: 20} }} label="Number" type="number"
+              id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)}
+              required maxLength={10} disabled={mode === 'View'}
+              />
+            <TextField
+              sx={{ width: '30%', minWidth: '400px', '>div':{borderRadius: 20} }}
+              label="City" type="text" id="city" name="city" value={city}
+              onChange={(e) => setCity(e.target.value)} required maxLength={50} 
+              disabled={mode === 'View'}
+              />
+            <TextField
+              sx={{ '>div':{borderRadius: 20} }} label="State" type="text" id="state"
+              name="state" value={state} onChange={(e) => setState(e.target.value)}
+              required maxLength={50} disabled={mode === 'View'}
+              />
           </Section>
           <Button variant="contained" type="submit" color="orange" sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}>Submit</Button>
         </Box>

@@ -56,6 +56,10 @@ form.loading::after {
   }
 }
 
+.justify-center > div {
+  justify-content: center;
+  display: flex;
+}
 
 .with-background {
   background-image: url('../assets/home-background.png');

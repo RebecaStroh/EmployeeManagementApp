@@ -19,9 +19,9 @@ function EmployeeCard({employee}) {
       transition: 'transform 0.3s',
       border: '1px solid #ccc',
     }}>
-      <Link to="/new-employee" state={{ employee }}>
+      <Link to="/new-employee" state={{ employee, mode: 'View' }}>
         <Typography variant="h6">{employee.name}</Typography>
-        <Box display="flex" sx={{ml:2, mr:2}} gap={3}>
+        <Box display="flex" sx={{ml:2, mr:2, mt:2}} gap={3}>
           <Box display="flex" flexDirection="column">
             <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
               <MailOutlineIcon fontSize="small" />
@@ -40,6 +40,11 @@ function EmployeeCard({employee}) {
             <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
               <LocationOnIcon fontSize="small" />
               {`${employee.street}, ${employee.number}, ${employee.city}, ${employee.state}`}
+            </Box>
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
+              CPF: {employee.cpf}
             </Box>
           </Box>
         </Box>
