@@ -1,6 +1,6 @@
 #root > div {
   text-align: left;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 81px);
   display: flex;
   overflow-y: auto;
   background-size: cover;
@@ -40,7 +40,7 @@ form.loading::after {
   transform: translate(-50%, -50%);
   width: 50px; /* Defina a largura desejada para o seu GIF */
   height: 50px; /* Defina a altura desejada para o seu GIF */
-  background-image: url('../assets/logo.svg'); /* Substitua pela URL externa do seu GIF */
+  background-image: url('https://www.benmvp.com/f3b3c5fd2893249d60a9cadfc077b96d/loading-spinner-final.svg'); /* Substitua pela URL externa do seu GIF */
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover; /* Certifique-se de que o GIF cubra completamente a área especificada */
@@ -55,6 +55,22 @@ form.loading::after {
     transform: rotate(360deg);
   }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
 
 .justify-center > div {
   justify-content: center;

@@ -7,6 +7,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneIcon from '@mui/icons-material/Phone';
 import CakeIcon from '@mui/icons-material/Cake';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import dayjs from 'dayjs';
 
 function EmployeeCard({employee}) {
   return (
@@ -34,19 +35,17 @@ function EmployeeCard({employee}) {
           </Box>
           <Box display="flex" flexDirection="column">
             <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
-              <CakeIcon fontSize="small" />
-              {employee.dob}
-            </Box>
-            <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
-              <LocationOnIcon fontSize="small" />
-              {`${employee.street}, ${employee.number}, ${employee.city}, ${employee.state}`}
-            </Box>
-          </Box>
-          <Box display="flex" flexDirection="column">
-            <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
               CPF: {employee.cpf}
             </Box>
+            <Box display="flex" alignItems="center" sx={{m:1}} gap={1}>
+              <CakeIcon fontSize="small" />
+              {dayjs(employee.dob).format('MM/DD/YYYY')}
+            </Box>
           </Box>
+        </Box>
+        <Box display="flex" alignItems="center" sx={{m:1, ml:3, mr:3}} gap={1}>
+          <LocationOnIcon fontSize="small" />
+          {`${employee.street}, ${employee.number}, ${employee.city}, ${employee.state}`}
         </Box>
       </Link>
     </Card>

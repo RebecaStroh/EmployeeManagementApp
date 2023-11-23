@@ -16,6 +16,7 @@ import {Paper } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 
 // New styled components
@@ -62,12 +63,12 @@ const Line = styled('hr')(({ theme }) => ({
 function NewEmployee() {
   const location = useLocation();
   const navigate = useNavigate();
-  const employee = location.state?.employee;
-  const mode = location.state?.mode || 'New';
+  const [mode, setMode] = useState(location.state?.mode || 'New');
+  const [employee, setEmployee] = useState(location.state?.employee);
 
   // States for each form field
   const [name, setName] = useState(employee?.name || '');
-  const [dob, setDob] = useState(employee?.dob || '');
+  const [dob, setDob] = useState(employee?.dob ? dayjs(employee?.dob) : '');
   const [cpf, setCpf] = useState(employee?.cpf || '');
   const [email, setEmail] = useState(employee?.email || '');
   const [phone, setPhone] = useState(employee?.phone || '');
@@ -104,7 +105,7 @@ function NewEmployee() {
       formData.append('schoolCurriculum', linkDocuments?.schoolCurriculum || schoolCurriculum);
 
       // In case it is a change on an existing instance, indicate it to API
-      if (employee) formData.append('edit', "true");
+      if (mode === 'Edit') formData.append('edit', "true");
       
       const response = await fetch(url, {
         method: 'POST',
@@ -113,15 +114,28 @@ function NewEmployee() {
 
       if (response.ok) {
         const responseData = await response.json();
-        alert('Employee created successfully');
+        if (mode === 'Edit')
+          alert('Employee updated successfully');
+        else
+          alert('Employee created successfully');
+
         setLoading(false);
-        navigate('/new-employee', { state: { employee: responseData } });
+        setEmployee(responseData);
+        setMode('View');
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       } else {
-        alert('Error creating employee:', response.statusText);
+        if (response.status === 400)
+          alert("Employee data already exists");
+        else
+          alert('Error creating employee:');
+
         console.error('Error creating employee:', response.statusText);
       }
     } catch (error) {
-      alert('Error creating employee:', error.message);
+      alert('Error creating employee:');
       console.error('Error creating employee:', error.message);
     }
     setLoading(false);
@@ -181,12 +195,13 @@ function NewEmployee() {
     );
   }
 
+
   return (
     <Container
       title={`${mode} employee`}
       classes="with-background"
       leftButtonContent={mode === 'View' 
-        ? <Link to="/new-employee" style={{ color: 'white' }} state={{ employee, mode: 'Edit' }}> Edit </Link>
+        ? <a style={{ color: 'white' }} onClick={() => setMode('Edit')}> Edit Employee </a>
         : null}
       >
       <Box
@@ -218,7 +233,7 @@ function NewEmployee() {
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} required 
-                sx={{ '>div':{borderRadius: 20} }}
+                sx={{ '>div':{borderRadius: 20} }} value={dob}
                 disabled={mode === 'View'}
               />
             </LocalizationProvider>
