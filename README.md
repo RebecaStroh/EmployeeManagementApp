@@ -12,7 +12,21 @@ The Iron Mountain Employee Onboarding System is a sophisticated and user-friendl
 
 - **Search and Display Functionality**: HR staff can search for employees using metadata fields and document types. The system displays a comprehensive list of all registered employees, with the ability to view detailed information and documents.
 
-# Getting Started
+# [PRODUCTION] Getting Started
+
+### Backend
+To access the production backend of the app, go to:
+https://console.firebase.google.com/u/0/project/employeemanagementapp-767af/overview
+
+If any account needed, please request the developers.
+
+### Frontend
+To access the production frontend of the app, go to:
+https://employeemanagementapp-767af.web.app/
+
+Be aware that all data are being storaged in public production environment.
+
+# [LOCAL] Getting Started
 
 ## Dependencies
 
@@ -30,7 +44,7 @@ To set up and run the backend of the app, follow these steps:
 
 1. Navigate to the backend folder:
    ```bash
-   cd EmployeeManagementApp-develop\backend\functions
+   cd .\backend\functions
    ```
 2. Install the required dependencies:
    ```bash
@@ -47,7 +61,7 @@ To set up and run the frontend of the app, follow these steps:
 
 1. Navigate to the frontend folder:
    ```bash
-   cd EmployeeManagementApp-develop\frontend\employee-management-app
+   cd .\frontend\employee-management-app
    ```
 2. Install the required dependencies:
    ```bash
@@ -76,7 +90,7 @@ This project follows a microservices-based architecture, utilizing modern techno
 ### Cloud Functions
 
 - **Function:** 
-  - Cloud Functions are used for server-side operations such as data processing and integration with other services.
+  - Firebase Cloud Functions are used for server-side operations such as data processing and integration with other services.
   - They act as an intermediary layer between the frontend and the database, managing requests and responses.
 
 ### Realtime Database
@@ -88,19 +102,21 @@ This project follows a microservices-based architecture, utilizing modern techno
 ### Firebase Storage
 
 - **Function:** 
-  - Used for storing files.
+  - Firebase Storage used for storing files.
   - Provides a robust and secure solution for file storage and retrieval.
+
+## Diagram
+![System diagrm flow](./diagram.png)
 
 ## Integration and Data Flow
 
 - The frontend, developed in React, makes requests to Cloud Functions.
 - Cloud Functions process these requests, interacting with the Realtime Database to retrieve or store data.
-- Firebase Storage is used to manage files and media related to employees.
-- All communication and data transfer is done securely and optimized for performance.
+- Firebase Storage is used to manage files related to employees.
 
 ---
 
-This architecture is designed with scalability, easy maintenance, and system efficiency in mind, ensuring a smooth and responsive user experience. Additionally, the choice of technologies and the serverless approach enable rapid development and deployment, significantly reducing the time-to-market for new features and updates.
+This architecture is designed an easy maintenance, the choice of technologies and the serverless approach enable rapid development and deployment, significantly reducing the time-to-market for new features and updates.
 
 
 
@@ -113,7 +129,7 @@ The project was developed in one week as part of a job interview process. Due to
 
 **Current Problem:** Currently, all functions and file storage are public, posing a significant security risk.
 
-**Solution:** Implement a robust authentication and authorization system. This may include integrating with third-party authentication services (such as Auth0) or utilizing Firebase authentication features.
+**Solution:** Implement a robust authentication and authorization system. This may include integrating Firebase authentication features.
 
 ### Access Control and Data Security:
 
