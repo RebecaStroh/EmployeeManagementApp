@@ -137,14 +137,21 @@ exports.createEmployee = onRequest((request, response) => {
       }
 
       // Set new data
-      ref.set(employee, (error) => {
-        if (error) {
-          console.error(error);
-          logger.error(`Not included ${error}`, {structuredData: true});
-          response.status(404).send("No data found");
+      ref.once("value", (snapshot) => {
+        if (snapshot.exists()) {
+          // Data for the given CPF already exists, handle accordingly
+          response.status(400).send("Employee data already exists");
         } else {
-          logger.info(`Employee included`, {structuredData: true});
-          response.status(200).send(employee);
+          ref.set(employee, (error) => {
+            if (error) {
+              console.error(error);
+              logger.error(`Not included ${error}`, {structuredData: true});
+              response.status(404).send("No data found");
+            } else {
+              logger.info(`Employee included`, {structuredData: true});
+              response.status(200).send(employee);
+            }
+          });
         }
       });
     });
