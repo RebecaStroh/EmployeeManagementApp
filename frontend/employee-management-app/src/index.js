@@ -11,9 +11,6 @@ const theme = createTheme({
     borderRadius: 12
   },
   palette: {
-    primary: {
-      main: '#fff',
-    },
     blue: {
       main: '#00b7cb',
       light: '#b1e9ee',

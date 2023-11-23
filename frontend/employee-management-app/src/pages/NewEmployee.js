@@ -68,7 +68,7 @@ function NewEmployee() {
 
   // States for each form field
   const [name, setName] = useState(employee?.name || '');
-  const [dob, setDob] = useState(employee?.dob ? dayjs(employee?.dob) : '');
+  const [dob, setDob] = useState(employee?.dob ? dayjs(employee?.dob) : null);
   const [cpf, setCpf] = useState(employee?.cpf || '');
   const [email, setEmail] = useState(employee?.email || '');
   const [phone, setPhone] = useState(employee?.phone || '');
@@ -212,7 +212,7 @@ function NewEmployee() {
                 sx={{ mt:1, mb:1, ml:2, mr:2, borderRadius: 20, height: '100%' }}
                 disabled={mode === 'View'}
               >
-                Upload <VisuallyHiddenInput type="file"  id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleChange}/>
+                Upload <VisuallyHiddenInput type="file" required id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleChange}/>
               </Button>
             : <p style={{margin: '15px', maxWidth: '400px', wordWrap: 'break-word'}}>{file.name}</p>
         }
@@ -248,6 +248,7 @@ function NewEmployee() {
         sx={{
           '& .MuiTextField-root': { m: 1 },
         }}
+        onSubmit={(event) => { event.preventDefault(); handleAlert(`submit`); }}
         flexDirection="row"
         display="flex"
         gap={5}
@@ -269,9 +270,14 @@ function NewEmployee() {
               maxLength={50}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} required 
+              <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} 
                 sx={{ '>div':{borderRadius: 20} }} value={dob}
                 disabled={mode === 'View'}
+                slotProps={{
+                  textField: {
+                    required: true,
+                  },
+                }}
               />
             </LocalizationProvider>
             <TextField
@@ -349,10 +355,9 @@ function NewEmployee() {
               required maxLength={50} disabled={mode === 'View'}
               />
           </Section>
-          <Button variant="contained" type="button" color="orange"
+          {mode !== 'View' && <Button variant="contained" type="submit" color="orange"
             sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}
-            onClick={() => handleAlert(`submit`)}
-            >Submit</Button>
+            >Submit</Button>}
         </Box>
         <Box sx={{ flex: 0.3}} >
           <Card sx={{ p: 3 }} >
