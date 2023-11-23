@@ -57,6 +57,7 @@ const Line = styled('hr')(({ theme }) => ({
 }));
 
 
+// Page component
 function NewEmployee() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ function NewEmployee() {
       if (response.ok) {
         const responseData = await response.json();
         alert('Employee created successfully');
-        navigate('/employee', { state: { employee: responseData } });
+        navigate('/new-employee', { state: { employee: responseData } });
       } else {
         alert('Error creating employee:', response.statusText);
         console.error('Error creating employee:', response.statusText);
@@ -174,134 +175,129 @@ function NewEmployee() {
   }
 
   return (
-    <Container>
-      <div className='new-employee-content'>
-        <Box display="flex" flexDirection="column" sx={{m: 4, ml: 11, mr:11}} >
-          <h1>{employee ? "Edit" : "New"} employee</h1>
-          <Box
-            component="form"
-            sx={{
-              '& .MuiTextField-root': { m: 1 },
-            }}
-            onSubmit={handleSubmit}
-            flexDirection="row"
-            display="flex"
-            gap={5}
-          >
-            <Box sx={{flex: 0.7}} display="flex" flexDirection="column">
-              <Section>
-                <Header>
-                  <p>Personal Information</p>
-                  <Line />
-                </Header>
-                <TextField
-                  sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }}
-                  label="Name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  maxLength={50}
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} required 
-                    sx={{ '>div':{borderRadius: 20} }}
-                  />
-                </LocalizationProvider>
-                <TextField
-                  label="CPF"
-                  type="text"
-                  id="cpf"
-                  name="cpf"
-                  value={cpf}
-                  onChange={(e) => setCpf(e.target.value)}
-                  required
-                  maxLength={14}
-                  disabled={employee ? 1 : 0}
-                  sx={{ '>div':{borderRadius: 20} }}
-                  />
-              </Section>
+    <Container title={`${employee ? "Edit" : "New"} employee`} classes="with-background">
+      <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { m: 1 },
+        }}
+        onSubmit={handleSubmit}
+        flexDirection="row"
+        display="flex"
+        gap={5}
+      >
+        <Box sx={{flex: 0.7}} display="flex" flexDirection="column">
+          <Section>
+            <Header>
+              <p>Personal Information</p>
+              <Line />
+            </Header>
+            <TextField
+              sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }}
+              label="Name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              maxLength={50}
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker label="Birth of Date" id="dob" name="dob" onChange={(e) => setDob(e)} required 
+                sx={{ '>div':{borderRadius: 20} }}
+              />
+            </LocalizationProvider>
+            <TextField
+              label="CPF"
+              type="text"
+              id="cpf"
+              name="cpf"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              required
+              maxLength={14}
+              disabled={employee ? true : false}
+              sx={{ '>div':{borderRadius: 20} }}
+              />
+          </Section>
 
-              <Section>
-                <Header>
-                  <p>Contact Information</p>
-                  <Line />
-                </Header>
-                <TextField
-                  sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }}
-                  label="Email"
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  maxLength={50}
-                />
-                <TextField
-                  label="Cellphone Number"
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  pattern="\d{10}"
-                  placeholder="1234567890"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  maxLength={10}
-                  sx={{ '>div':{borderRadius: 20} }}
-                />
-              </Section>
-              <Section>
-                <Header>
-                  <p>Address Information</p>
-                  <Line />
-                </Header>
-                <TextField sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }} label="Street" type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)} required maxLength={50} />
-                <TextField sx={{ '>div':{borderRadius: 20} }} label="Number" type="number" id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)} required maxLength={10} />
-                <TextField sx={{ width: '30%', minWidth: '400px', '>div':{borderRadius: 20} }} label="City" type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)} required maxLength={50} />
-                <TextField sx={{ '>div':{borderRadius: 20} }} label="State" type="text" id="state" name="state" value={state} onChange={(e) => setState(e.target.value)} required maxLength={50} />
-              </Section>
-              <Button variant="contained" type="submit" color="orange" sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}>Submit</Button>
-            </Box>
-            <Box sx={{ flex: 0.3}} >
-              <Card sx={{ p: 3 }} >
-                <File
-                  label="Employment Contract:"
-                  fileLink={linkDocuments?.employmentContract}
-                  file={employmentContract}
-                  removeLink={() => { setLinkDocuments({...linkDocuments, employmentContract: null}) }}
-                  handleChange={handleEmploymentContractChange}
-                />
-                <Line />
-                <File
-                  label="CPF/RG:"
-                  fileLink={linkDocuments?.idDocument}
-                  file={idDocument}
-                  removeLink={() => { setLinkDocuments({...linkDocuments, idDocument: null}) }}
-                  handleChange={handleIdDocumentChange}
-                />
-                <Line />
-                <File
-                  label="Proof of Address:"
-                  fileLink={linkDocuments?.proofOfAddress}
-                  file={proofOfAddress}
-                  removeLink={() => { setLinkDocuments({...linkDocuments, proofOfAddress: null}) }}
-                  handleChange={handleProofOfAddressChange}
-                />
-                <Line />
-                <File
-                  label="School Curriculum:"
-                  fileLink={linkDocuments?.schoolCurriculum}
-                  file={schoolCurriculum}
-                  removeLink={() => { setLinkDocuments({...linkDocuments, schoolCurriculum: null}) }}
-                  handleChange={handleSchoolCurriculumChange}
-                />
-              </Card>
-            </Box>
-          </Box>
+          <Section>
+            <Header>
+              <p>Contact Information</p>
+              <Line />
+            </Header>
+            <TextField
+              sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }}
+              label="Email"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              maxLength={50}
+            />
+            <TextField
+              label="Cellphone Number"
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="\d{10}"
+              placeholder="1234567890"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              maxLength={10}
+              sx={{ '>div':{borderRadius: 20} }}
+            />
+          </Section>
+          <Section>
+            <Header>
+              <p>Address Information</p>
+              <Line />
+            </Header>
+            <TextField sx={{ width: '50%', minWidth: '600px', '>div':{borderRadius: 20} }} label="Street" type="text" id="street" name="street" value={street} onChange={(e) => setStreet(e.target.value)} required maxLength={50} />
+            <TextField sx={{ '>div':{borderRadius: 20} }} label="Number" type="number" id="number" name="number" value={number} onChange={(e) => setNumber(e.target.value)} required maxLength={10} />
+            <TextField sx={{ width: '30%', minWidth: '400px', '>div':{borderRadius: 20} }} label="City" type="text" id="city" name="city" value={city} onChange={(e) => setCity(e.target.value)} required maxLength={50} />
+            <TextField sx={{ '>div':{borderRadius: 20} }} label="State" type="text" id="state" name="state" value={state} onChange={(e) => setState(e.target.value)} required maxLength={50} />
+          </Section>
+          <Button variant="contained" type="submit" color="orange" sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}>Submit</Button>
         </Box>
-      </div>
+        <Box sx={{ flex: 0.3}} >
+          <Card sx={{ p: 3 }} >
+            <File
+              label="Employment Contract:"
+              fileLink={linkDocuments?.employmentContract}
+              file={employmentContract}
+              removeLink={() => { setLinkDocuments({...linkDocuments, employmentContract: null}) }}
+              handleChange={handleEmploymentContractChange}
+            />
+            <Line />
+            <File
+              label="CPF/RG:"
+              fileLink={linkDocuments?.idDocument}
+              file={idDocument}
+              removeLink={() => { setLinkDocuments({...linkDocuments, idDocument: null}) }}
+              handleChange={handleIdDocumentChange}
+            />
+            <Line />
+            <File
+              label="Proof of Address:"
+              fileLink={linkDocuments?.proofOfAddress}
+              file={proofOfAddress}
+              removeLink={() => { setLinkDocuments({...linkDocuments, proofOfAddress: null}) }}
+              handleChange={handleProofOfAddressChange}
+            />
+            <Line />
+            <File
+              label="School Curriculum:"
+              fileLink={linkDocuments?.schoolCurriculum}
+              file={schoolCurriculum}
+              removeLink={() => { setLinkDocuments({...linkDocuments, schoolCurriculum: null}) }}
+              handleChange={handleSchoolCurriculumChange}
+            />
+          </Card>
+        </Box>
+      </Box>
     </Container>
   );
 }

@@ -1,11 +1,36 @@
-div[class$="-content"] {
+#root > div {
   text-align: left;
   min-height: calc(100vh - 80px);
   display: flex;
   overflow-y: auto;
   background-size: cover;
-  background-color: #06191f;
+  background-color: rgb(240, 242, 245);
+  font-family: "Geometria","Calibri",arial,sans-serif;
+  
+  h1 {
+    color: #14477d;
+  }
+
+  h6 {
+    color:#14477d;
+  }
+
+  a {
+    text-decoration: none;
+    color: #58595b;
+  }
+
+  .MuiPaper-root {
+    opacity: 0.93;
+  }
+}
+
+.with-background {
   background-image: url('../assets/home-background.png');
+
+  h1 {
+    color: white !important;
+  }
 
   position: relative;
   z-index: 1;
@@ -19,17 +44,5 @@ div[class$="-content"] {
     height: 100%;
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
     z-index: -1;
-  }
-  
-  h1 {
-    color: white;
-  }
-  a {
-    text-decoration: underline;
-    color: #4183c4;
-  }
-
-  .MuiPaper-root {
-    opacity: 0.93;
   }
 }
