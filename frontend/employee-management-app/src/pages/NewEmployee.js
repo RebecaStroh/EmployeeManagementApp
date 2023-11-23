@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // Components
 import Container from './Container';
+import CustomAlert from '../components/CustomAlert';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -15,7 +16,6 @@ import { styled } from '@mui/system';
 import {Paper } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 
@@ -82,10 +82,22 @@ function NewEmployee() {
   const [schoolCurriculum, setSchoolCurriculum] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [linkDocuments, setLinkDocuments] = useState(null);
+
+  useEffect(() => {
+    if (employee) {
+      setLinkDocuments({
+        employmentContract: employee.employmentContract !== "null" ? employee.employmentContract : null,
+        idDocument: employee.idDocument !== "null" ? employee.idDocument : null,
+        proofOfAddress: employee.proofOfAddress !== "null" ? employee.proofOfAddress : null,
+        schoolCurriculum: employee.schoolCurriculum !== "null" ? employee.schoolCurriculum : null
+      });
+    }
+  }, []);
+
   // Function to handle Submit - send to backend and handle return
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     setLoading(true);
-    event.preventDefault();
     const url = 'https://createemployee-nlxluegtta-uc.a.run.app';
     try {
       // Create structure to sen to API
@@ -113,46 +125,26 @@ function NewEmployee() {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
         if (mode === 'Edit')
-          alert('Employee updated successfully');
+          handleAlert(`updated-successfully`);
         else
-          alert('Employee created successfully');
+          handleAlert(`created-successfully`);
 
         setLoading(false);
-        setEmployee(responseData);
-        setMode('View');
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
       } else {
         if (response.status === 400)
-          alert("Employee data already exists");
+          handleAlert(`duplicated`);
         else
-          alert('Error creating employee:');
+          handleAlert(`error`);
 
         console.error('Error creating employee:', response.statusText);
       }
     } catch (error) {
-      alert('Error creating employee:');
+      handleAlert(`error`);
       console.error('Error creating employee:', error.message);
     }
     setLoading(false);
   };
-
-  const [linkDocuments, setLinkDocuments] = useState(null);
-
-  useEffect(() => {
-    if (employee) {
-      setLinkDocuments({
-        employmentContract: employee.employmentContract !== "null" ? employee.employmentContract : null,
-        idDocument: employee.idDocument !== "null" ? employee.idDocument : null,
-        proofOfAddress: employee.proofOfAddress !== "null" ? employee.proofOfAddress : null,
-        schoolCurriculum: employee.schoolCurriculum !== "null" ? employee.schoolCurriculum : null
-      });
-    }
-  }, []);
 
   // Handle documents
   const handleEmploymentContractChange = (event) => {
@@ -169,7 +161,7 @@ function NewEmployee() {
   };
 
   // Create an inside component to render all File selector
-  const File = ({label, fileLink, file, removeLink, handleChange}) => {
+  const File = ({label, fileLink, file, handleChange, id}) => {
     return (
       <Box display="flex" flexDirection="column">
         <label htmlFor="employment-contract">{label}</label>
@@ -178,7 +170,7 @@ function NewEmployee() {
               <Button component="label" variant="contained" color="blue" sx={{width:'100%', borderRadius: 20, height: '100%' }}>
                 <a href={fileLink} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none', color: 'white'}}>View Document</a>
               </Button>
-              {mode !== 'View' && <CloseIcon onClick={removeLink} sx={{ cursor: "pointer" }} fontSize='1' />}
+              {mode !== 'View' && <CloseIcon onClick={() => handleAlert(`delete-${id}`)} sx={{ cursor: "pointer" }} fontSize='1' />}
             </Box>
           : !file?.name 
             ? <Button
@@ -195,6 +187,19 @@ function NewEmployee() {
     );
   }
 
+  // dialog
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const [alertContent, setAlertContent] = useState('');
+
+  const handleClose = () => {
+    setAlertOpen(false);
+    setAlertContent('');
+  };
+
+  const handleAlert = (type) => {
+    setAlertContent(type);
+    setAlertOpen(true);
+  };
 
   return (
     <Container
@@ -210,7 +215,6 @@ function NewEmployee() {
         sx={{
           '& .MuiTextField-root': { m: 1 },
         }}
-        onSubmit={handleSubmit}
         flexDirection="row"
         display="flex"
         gap={5}
@@ -283,6 +287,7 @@ function NewEmployee() {
               disabled={mode === 'View'}
             />
           </Section>
+
           <Section>
             <Header>
               <p>Address Information</p>
@@ -311,7 +316,10 @@ function NewEmployee() {
               required maxLength={50} disabled={mode === 'View'}
               />
           </Section>
-          <Button variant="contained" type="submit" color="orange" sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}>Submit</Button>
+          <Button variant="contained" type="button" color="orange"
+            sx={{alignSelf: 'flex-end', borderRadius: 20, height: '100%' }}
+            onClick={() => handleAlert(`submit`)}
+            >Submit</Button>
         </Box>
         <Box sx={{ flex: 0.3}} >
           <Card sx={{ p: 3 }} >
@@ -319,36 +327,71 @@ function NewEmployee() {
               label="Employment Contract:"
               fileLink={linkDocuments?.employmentContract}
               file={employmentContract}
-              removeLink={() => { setLinkDocuments({...linkDocuments, employmentContract: null}) }}
               handleChange={handleEmploymentContractChange}
+              id="employmentContract"
             />
             <Line />
             <File
               label="CPF/RG:"
               fileLink={linkDocuments?.idDocument}
               file={idDocument}
-              removeLink={() => { setLinkDocuments({...linkDocuments, idDocument: null}) }}
               handleChange={handleIdDocumentChange}
+              id="idDocument"
             />
             <Line />
             <File
               label="Proof of Address:"
               fileLink={linkDocuments?.proofOfAddress}
               file={proofOfAddress}
-              removeLink={() => { setLinkDocuments({...linkDocuments, proofOfAddress: null}) }}
               handleChange={handleProofOfAddressChange}
+              id="proofOfAddress"
             />
             <Line />
             <File
               label="School Curriculum:"
               fileLink={linkDocuments?.schoolCurriculum}
               file={schoolCurriculum}
-              removeLink={() => { setLinkDocuments({...linkDocuments, schoolCurriculum: null}) }}
               handleChange={handleSchoolCurriculumChange}
+              id="schoolCurriculum"
             />
           </Card>
         </Box>
       </Box>
+
+      {isAlertOpen && <CustomAlert
+        open={isAlertOpen}
+        handleClose={handleClose}
+        content={
+          alertContent === 'submit'
+            ? 'Are you sure you want to submit?'
+            : alertContent.includes('delete')
+            ? 'Are you sure you want to delete this document?'
+            : alertContent === 'updated-successfully'
+            ? 'Employee updated sucessfully'
+            : alertContent === 'created-successfully'
+            ? 'Employee created sucessfully'
+            : alertContent === 'duplicated'
+            ? `An employee with the CPF ${cpf} already exists`
+            : 'Error creating employee'
+        }
+        onConfirm={
+          alertContent === 'submit'
+            ? handleSubmit
+            : alertContent === 'delete-employmentContract'
+            ? () => setLinkDocuments({...linkDocuments, employmentContract: null})
+            : alertContent === 'delete-idDocument'
+            ? () => setLinkDocuments({...linkDocuments, idDocument: null})
+            : alertContent === 'delete-proofOfAddress'
+            ? () => setLinkDocuments({...linkDocuments, proofOfAddress: null})
+            : alertContent === 'delete-schoolCurriculum'
+            ? () => setLinkDocuments({...linkDocuments, schoolCurriculum: null})
+            : alertContent.includes('successfully')
+            ? () => navigate('/employees')
+            : null
+        }
+        cancelLabel={alertContent === 'submit' || alertContent.includes('delete') ? "Cancel" : null}
+        confirmLabel={alertContent === 'submit' || alertContent.includes('delete') ? "Confirm" : "Ok"}
+      />}
     </Container>
   );
 }
