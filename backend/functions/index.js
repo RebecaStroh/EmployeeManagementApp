@@ -211,20 +211,26 @@ exports.getAllEmployees = onRequest((request, response) => {
             if (searchTerm === "") {
               employees.push(data[key]);
             } else {
-              // Filter by calculating the Jaccard similarity
+              let bestSimilarity = 0;
+              // Get similiarity by calculating the Jaccard similarity
               Object.keys(data[key]).forEach((attr) => {
                 const similarity = stringSimilarity
                     .compareTwoStrings(searchTerm.toLowerCase(),
                         data[key][attr].toLowerCase());
-                const similarityThreshold = 0.4;
 
-                if (similarity >= similarityThreshold) {
-                  employees.push(data[key]);
-                  return;
+                if (bestSimilarity < similarity) {
+                  bestSimilarity = similarity;
                 }
               });
+
+              if (bestSimilarity > 0.1) {
+                data[key].similarity = bestSimilarity;
+                employees.push(data[key]);
+              }
             }
           });
+
+          employees.sort((a, b) => b.similarity - a.similarity);
         }
 
         response.status(200).json(employees);
