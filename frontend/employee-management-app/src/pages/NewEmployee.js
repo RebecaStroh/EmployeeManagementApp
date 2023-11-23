@@ -111,10 +111,44 @@ function NewEmployee() {
       formData.append('number', number);
       formData.append('city', city);
       formData.append('state', state);
-      formData.append('employmentContract', linkDocuments?.employmentContract || employmentContract);
-      formData.append('idDocument', linkDocuments?.idDocument || idDocument);
-      formData.append('proofOfAddress', linkDocuments?.proofOfAddress || proofOfAddress);
-      formData.append('schoolCurriculum', linkDocuments?.schoolCurriculum || schoolCurriculum);
+
+      if (linkDocuments?.employmentContract) {
+        formData.append('employmentContract', linkDocuments?.employmentContract);
+      } else if (employmentContract) {
+        const newFile = new Blob([employmentContract], { type: employmentContract.type });
+        newFile.name = "employmentContract";
+        formData.append('employmentContract', newFile, "employmentContract");
+      } else {
+        formData.append('employmentContract', null);
+      }
+      if (linkDocuments?.idDocument) {
+        formData.append('idDocument', linkDocuments?.idDocument);
+      } else if (idDocument) {
+        // console.log("type:", idDocument.type)
+        const newFile = new Blob([idDocument], { type: idDocument.type });
+        newFile.name = "idDocument";
+        formData.append('idDocument', newFile, "idDocument");
+      } else {
+        formData.append('idDocument', null);
+      }
+      if (linkDocuments?.proofOfAddress) {
+        formData.append('proofOfAddress', linkDocuments?.proofOfAddress);
+      } else if (proofOfAddress) {
+        const newFile = new Blob([proofOfAddress], { type: proofOfAddress.type });
+        newFile.name = "proofOfAddress";
+        formData.append('proofOfAddress', newFile, "proofOfAddress");
+      } else {
+        formData.append('proofOfAddress', null);
+      }
+      if (linkDocuments?.schoolCurriculum) {
+        formData.append('schoolCurriculum', linkDocuments?.schoolCurriculum);
+      } else if (schoolCurriculum) {
+        const newFile = new Blob([schoolCurriculum], { type: schoolCurriculum.type });
+        newFile.name = "schoolCurriculum";
+        formData.append('schoolCurriculum', newFile, "schoolCurriculum");
+      } else {
+        formData.append('schoolCurriculum', null);
+      }
 
       // In case it is a change on an existing instance, indicate it to API
       if (mode === 'Edit') formData.append('edit', "true");
