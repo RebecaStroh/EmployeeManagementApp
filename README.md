@@ -74,6 +74,10 @@ To set up and run the frontend of the app, follow these steps:
    npm start
    ```
 
+### Environment URLs
+
+To make all requests to the local endpoints, change the urls in the code section highlighted with **// Change to specific environment **
+
 # System Architecture
 
 This project follows a microservices-based architecture, utilizing modern technologies to provide an efficient and scalable system. Below, we detail the key components of the architecture.
@@ -244,6 +248,29 @@ The project was developed in one week as part of a job interview process. Due to
 **Current Problem:** The absence of proper access controls can lead to unauthorized access to sensitive employee information.
 
 **Solution:** Establish role-based access control policies, ensuring that users only access the data necessary for their roles and responsibilities. A proposed solution for that would be having a Employee role and a HR role.
+
+### Improved Modularization, Code Reusability, and Project Efficiency
+
+**Current Challenge:** Presently, not all components are as modularized as optimal, given the short project timeline.
+
+**Proposed Solution:**
+
+1. **Enhanced Modularization:**
+   - Break down larger components into smaller, reusable modules to improve code maintainability and readability.
+
+2. **Helper Functions Directory:**
+   - Create a dedicated "helpers" folder to house helper functions. This centralization ensures standardized and efficient modifications, impacting the entire project positively.
+
+3. **Environment Variables Setup:**
+   - Implement environment variables for seamless local development. This configuration enables easy switching between local and production APIs, enhancing flexibility during development. **This could be helpfull to protect the endpoints as well, by encrypting the file.**
+
+4. **Theme Configuration File:**
+   - Introduce a theme configuration file to centralize and standardize the visual aspects of the project. This file acts as a single source of truth for styling, promoting consistency throughout the application.
+
+5. **Docker Files Integration:**
+   - Provide Docker files to facilitate project execution. This addition streamlines the setup process, making it hassle-free for developers to run the application locally.
+
+These enhancements collectively contribute to a more organized, scalable, and developer-friendly project structure. The focus is on improving efficiency, maintainability, and providing a smooth development experience.
 
 ### Pagination
 
