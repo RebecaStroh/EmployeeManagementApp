@@ -128,15 +128,11 @@ Given the small size of the project, the components were not subdivided into sma
 
 /src
 | /assets
+- All project-related assets, from images to icons.
 | /components
+- Reusable React components that keep our code modular.
 | /pages
-
-
-- **/assets:** Contains project-related assets such as images, icons, or other media.
-
-- **/components:** Houses reusable React components used throughout the application.
-
-- **/pages:** Includes individual page components representing different views of the application.
+- Individual page components for different views of our app.
 
 ### Material-UI Library
 
@@ -145,19 +141,51 @@ The Material-UI (MUI) library was utilized to assist in the creation of the user
 
 
 ## Decision-Making Process
+
+In navigating the project's decision-making process, the primary focus was on the short time frame allocated for development. Here's an overview of the steps taken to shape the project:
+
+1. **Understanding Project Constraints:**
+   - Given the time constraints, a thorough review of project specifications and must-haves was conducted.
+   - A plan for creating an MVP that addressed project requirements was formulated.
+
+2. **Architectural and Technology Planning:**
+   - Technologies were carefully chosen and planned to allow for a flexible and straightforward architecture.
+   - The goal was to prioritize a manageable architecture, enabling a stronger focus on user interface design and overall user experience.
+
+3. **Market Research:**
+   - Studied other tools with similar purposes to gain insights into their functionality and market trends.
+
+4. **Development Execution:**
+   - With a development plan in mind, the initial focus was on creating the basic functionality.
+   - Backend development and essential project structures were established to support the website.
+
+5. **Iterative Development:**
+   - Incrementally developed each functionality, refining the project's structure and backend/frontend integration.
+
+6. **User Interface and Experience Enhancement:**
+   - Once the foundational structure was in place, improvements were made to functionalities, addressing edge cases and creating a user-friendly interface.
+   - Studied the company's website for visual inspiration, aligning the project's visual elements with the company's aesthetic.
+
+7. **Continuous Improvement:**
+   - Ongoing evaluation of project priorities and the identification of potential enhancements.
+
+This decision-making journey involved a strategic approach, from the initial project assessment to continuous refinement, prioritizing a user-centric and visually appealing application.
+
+
+### Decision-Making Outcomes
 Key decisions made during the solo development of the project, covering crucial aspects from technology choices to system architecture. Given the one-week timeframe for a solo project, decisions were focused on efficiency and rapid development.
 
-### System Architecture
+#### System Architecture
 **Decision:** It was choosen a microservices-based architecture for easy maintenance and efficiency.
 
 **Justification:** This choice allows for easier maintenance and agile development of new features within the limited time frame.
 
-### Technology Stack
+#### Technology Stack
 **Decision:** The project utilized React for the frontend and Firebase for the backend, leveraging seamless integration.
 
 **Justification:** Choosing these technologies provides a dynamic and efficient user experience while simplifying backend operations, crucial for rapid development.
 
-### User Interface Design
+#### User Interface Design
 **Decision:** The approach prioritized a simple and intuitive interface, where the design could connect somehow with the Company style.
 
 **Justification:** 
