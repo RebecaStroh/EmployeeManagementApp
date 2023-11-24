@@ -243,3 +243,49 @@ exports.getAllEmployees = onRequest((request, response) => {
     });
   }
 });
+
+
+// Function to delete one employee from database
+exports.deleteEmployee = onRequest((request, response) => {
+  response.set("Access-Control-Allow-Origin", "*");
+  response.set("Access-Control-Allow-Credentials", "true");
+
+  if (request.method === "OPTIONS") {
+    // Send response to OPTIONS requests
+    response.set("Access-Control-Allow-Methods", "DELETE");
+    response.set(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization",
+    );
+    response.set("Access-Control-Max-Age", "3600");
+    response.status(204).send("");
+  } else {
+    // Obtenha o CPF do parâmetro da solicitação
+    const cpf = request.body.cpf;
+
+    // Verifique se o CPF é válido
+    if (!cpf) {
+      return response.status(400).send("Invalid CPF");
+    }
+
+    const db = admin.database();
+    const ref = db.ref(`/Employee/${cpf}`);
+
+    // Verifique se o funcionário existe
+    ref.once("value", (snapshot) => {
+      if (!snapshot.exists()) {
+        return response.status(404).send("Employee not found");
+      }
+
+      // Exclua o funcionário
+      ref.remove((error) => {
+        if (error) {
+          console.error(error);
+          return response.status(500).send("Internal Server Error");
+        } else {
+          return response.status(200).send("Employee deleted successfully");
+        }
+      });
+    });
+  }
+});
