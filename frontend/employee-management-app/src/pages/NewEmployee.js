@@ -237,13 +237,56 @@ function NewEmployee() {
     setAlertOpen(true);
   };
 
+  const deleteEmployee = async() => {
+    setLoading(true);
+    try {
+      const response = await fetch('https://deleteemployee-nlxluegtta-uc.a.run.app', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cpf }),
+      });
+
+      // Handle response
+      handleAlert('deleted-successfully');
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      handleAlert('');
+    }
+    setLoading(false);
+  }
+
   return (
     <Container
       title={`${mode} employee`}
       classes="with-background"
-      leftButtonContent={mode === 'View' 
-        ? <a style={{ color: 'white' }} onClick={() => setMode('Edit')}> Edit Employee </a>
-        : null}
+      leftHeaderContent={ mode === 'View' ? 
+        <Box gap={3} display="flex">
+          <Button
+            variant="contained"
+            color="orange"
+            sx={{ height:"100%", borderRadius: 20 }}
+            onClick={() => setMode('Edit')}>
+            Edit Employee
+          </Button>
+          <Button
+            variant="contained"
+            color="orange"
+            sx={{ height:"100%", borderRadius: 20 }}
+            onClick={() => handleAlert(`delete-employee`)}>
+            Delete Employee
+          </Button>
+        </Box>
+        : mode === 'Edit' && 
+        <Button
+          variant="contained"
+          color="orange"
+          sx={{ height:"100%", borderRadius: 20 }}
+          onClick={() => handleAlert(`delete-employee`)}>
+          Delete Employee
+        </Button>
+      }
       >
       <Box
         className={loading ? 'loading' : ""}
@@ -405,6 +448,10 @@ function NewEmployee() {
         content={
           alertContent === 'submit'
             ? 'Are you sure you want to submit?'
+            : alertContent === 'delete-employee'
+            ? `Are you sure you delete this employee ${cpf}? This action cannot be undone.`
+            : alertContent === 'deleted-successfully'
+            ? 'Employee deleted sucessfully'
             : alertContent.includes('delete')
             ? 'Are you sure you want to delete this document?'
             : alertContent === 'updated-successfully'
@@ -413,7 +460,7 @@ function NewEmployee() {
             ? 'Employee created sucessfully'
             : alertContent === 'duplicated'
             ? `An employee with the CPF ${cpf} already exists`
-            : 'Error creating employee'
+            : 'An unexpected error had occured.'
         }
         onConfirm={
           alertContent === 'submit'
@@ -428,10 +475,12 @@ function NewEmployee() {
             ? () => setLinkDocuments({...linkDocuments, schoolCurriculum: null})
             : alertContent.includes('successfully')
             ? () => navigate('/employees')
+            : alertContent === 'delete-employee'
+            ? () => deleteEmployee()
             : null
         }
-        cancelLabel={alertContent === 'submit' || alertContent.includes('delete') ? "Cancel" : null}
-        confirmLabel={alertContent === 'submit' || alertContent.includes('delete') ? "Confirm" : "Ok"}
+        cancelLabel={alertContent === 'submit' || (alertContent.includes('delete') && alertContent !== 'deleted-successfully') ? "Cancel" : null}
+        confirmLabel={alertContent === 'submit' || (alertContent.includes('delete') && alertContent !== 'deleted-successfully') ? "Confirm" : "Ok"}
       />}
     </Container>
   );

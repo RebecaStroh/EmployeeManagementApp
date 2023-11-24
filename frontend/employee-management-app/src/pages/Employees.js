@@ -9,6 +9,7 @@ import EmployeeCard from '../components/Card';
 import { Link } from 'react-router-dom';
 import Card from "@mui/material/Card";
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);
@@ -49,7 +50,11 @@ function Employees() {
     <Container
       classes="with-background"
       title="Registered employees"
-      leftButtonContent={<Link to="/new-employee" style={{ color: 'white' }}> New Employee</Link>}>
+      leftHeaderContent={
+        <Button className='new' variant="contained" color="orange"  sx={{ height:"100%", borderRadius: 20 }}>
+          <Link to="/new-employee" style={{ color: 'white' }}> New Employee</Link>
+        </Button>
+      }>
       <Box display="flex" gap={3}>
         <Box sx={{ flex: 0.6 }} >
           {employees.length === 0 

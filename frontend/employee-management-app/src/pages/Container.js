@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import './Container.scss';
 import BackButton from '../components/BackButton';
 
-function Container({classes, title, leftButtonContent, children}) {
+function Container({classes, title, leftHeaderContent, children}) {
   return (
     <>
       <Header/>
@@ -16,9 +16,7 @@ function Container({classes, title, leftButtonContent, children}) {
           {title && <BackButton/>}
           {title && <Box display="flex" justifyContent="space-between" alignItems="center">
             <h1>{title}</h1>
-            {leftButtonContent && <Button className='new' variant="contained" color="orange"  sx={{ height:"100%", borderRadius: 20 }}>
-              {leftButtonContent}
-            </Button>}
+            {leftHeaderContent}
           </Box>}
           {children}
         </Box>
