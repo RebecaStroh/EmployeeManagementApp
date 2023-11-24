@@ -20,6 +20,8 @@ function Employees() {
   const fetchEmployees = async () => {
     setLoading(true);
     try {
+      // Change to specific environment
+      // const response = await fetch('http://127.0.0.1:5001/employeemanagementapp-767af/us-central1/getAllEmployees', {
       const response = await fetch('https://getallemployees-nlxluegtta-uc.a.run.app', {
         method: 'POST',
         headers: {
