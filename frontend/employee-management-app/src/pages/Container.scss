@@ -1,0 +1,100 @@
+#root > div {
+  text-align: left;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  overflow-y: auto;
+  background-size: cover;
+  background-color: rgb(240, 242, 245);
+  font-family: "Geometria","Calibri",arial,sans-serif;
+  
+  h1, h3, h6 {
+    color: #14477d;
+  }
+
+  a {
+    text-decoration: none;
+    color: #58595b;
+  }
+
+  .MuiPaper-root {
+    opacity: 0.93;
+  }
+}
+
+form.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+  z-index: 1;
+}
+
+form.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px; /* Defina a largura desejada para o seu GIF */
+  height: 50px; /* Defina a altura desejada para o seu GIF */
+  background-image: url('https://www.benmvp.com/f3b3c5fd2893249d60a9cadfc077b96d/loading-spinner-final.svg'); /* Substitua pela URL externa do seu GIF */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; /* Certifique-se de que o GIF cubra completamente a área especificada */
+  z-index: 2;
+  animation: loading-spin infinite 20s linear;
+}
+@keyframes loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+
+.justify-center > div {
+  justify-content: center;
+  display: flex;
+}
+
+.with-background {
+  background-image: url('../assets/home-background.png');
+
+  h1 {
+    color: white !important;
+  }
+
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    z-index: -1;
+  }
+}

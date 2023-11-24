@@ -1,0 +1,37 @@
+
+header {
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  background-color: #fff !important;
+
+  .logo-header {
+    height: 64px;
+    margin: 0 32px;
+  }
+
+  .navigation {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-left: 50px;
+
+    .nav-link {
+      text-decoration: none;
+      font-size: 18px;
+      color: #14477d;
+      padding: 15px;
+
+      &:hover {
+        opacity: 0.7;
+        transform: 'scale(1.02)'
+      }
+      transition: 'transform 0.3s';
+    }
+  }
+}
+
+// Global styles for body
+body {
+  margin: 0;
+}
