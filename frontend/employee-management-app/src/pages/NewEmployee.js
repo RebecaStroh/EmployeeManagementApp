@@ -181,23 +181,23 @@ function NewEmployee() {
 
   // Handle documents
   const handleEmploymentContractChange = (event) => {
-    setEmploymentContract(event.target.files[0]);
+    setEmploymentContract(event ? event.target.files[0] : event);
   };
   const handleIdDocumentChange = (event) => {
-    setIdDocument(event.target.files[0]);
+    setIdDocument(event ? event.target.files[0] : event);
   };
   const handleProofOfAddressChange = (event) => {
-    setProofOfAddress(event.target.files[0]);
+    setProofOfAddress(event ? event.target.files[0] : event);
   };
   const handleSchoolCurriculumChange = (event) => {
-    setSchoolCurriculum(event.target.files[0]);
+    setSchoolCurriculum(event ? event.target.files[0] : event);
   };
 
   // Create an inside component to render all File selector
   const File = ({label, fileLink, file, handleChange, id}) => {
     return (
       <Box display="flex" flexDirection="column">
-        <label htmlFor="employment-contract">{label}</label>
+        <label htmlFor={id}>{label}</label>
         {fileLink
           ? <Box display="flex" sx={{mt:1, mb:1, ml:2, mr:2}} alignItems="center" gap={1}>
               <Button component="label" variant="contained" color="blue" sx={{width:'100%', borderRadius: 20, height: '100%' }}>
@@ -212,9 +212,12 @@ function NewEmployee() {
                 sx={{ mt:1, mb:1, ml:2, mr:2, borderRadius: 20, height: '100%' }}
                 disabled={mode === 'View'}
               >
-                Upload <VisuallyHiddenInput type="file" required id="employment-contract" name="employment-contract" accept=".pdf" onChange={handleChange}/>
+                Upload <VisuallyHiddenInput type="file" required id={id} name={id} accept=".pdf" onChange={handleChange}/>
               </Button>
-            : <p style={{margin: '15px', maxWidth: '400px', wordWrap: 'break-word'}}>{file.name}</p>
+            : <Box display="flex" sx={{mt:1, mb:1, ml:2, mr:2}} alignItems="center" gap={1}>
+                <p style={{margin: '15px', maxWidth: '400px', wordWrap: 'break-word'}}>{file.name}</p>
+                <CloseIcon onClick={() => handleChange(null)} sx={{ cursor: "pointer" }} fontSize='1'/>
+              </Box>
         }
       </Box>
     );
